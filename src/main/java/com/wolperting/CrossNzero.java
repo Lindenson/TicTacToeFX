@@ -1,23 +1,17 @@
-import java.lang.reflect.Array;
+package com.wolperting;
+
 import java.util.*;
 import java.util.stream.Stream;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -26,21 +20,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.scene.image.Image;
+
+
 
 public class CrossNzero extends Application {
     Crestik[][] crst = new Crestik[3][3];
     private static final IntegerProperty I_MOVED = new SimpleIntegerProperty(0);
     static int[] Steps = new int[1];
     static int[] I_Win = {1};
-    static RadioMenuItem menuItemMedium;
+    static RadioMenuItem menuItemMedium, menuItemHard;
 
     public void start(Stage primaryStage) {
         BorderPane pane = new BorderPane();
@@ -60,7 +54,7 @@ public class CrossNzero extends Application {
 
         InstGrids(hbox1, pane);
         InstButtons(hbox2);
-        menuItemMedium = MakeMenu.show(pane);
+        MakeMenu.show(pane);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
@@ -178,8 +172,8 @@ public class CrossNzero extends Application {
         }
         Pole a = CompPlay.playMove(crst);
         if (a != null) {
-            this.crst[a.i][a.j].nolik = false;
-            this.crst[a.i][a.j].setVis(true);
+            crst[a.i][a.j].nolik = false;
+            crst[a.i][a.j].setVis(true);
             int[] arrn = Steps;
             arrn[0] = arrn[0] + 1;
             if (Steps[0] > 8) {
@@ -325,9 +319,11 @@ public class CrossNzero extends Application {
                 X.add(new Z(3,i, who[++k], k));
             }
 
-            if (menuItemMedium.isSelected())    {
+            if (menuItemMedium.isSelected() || menuItemHard.isSelected())    {
                 if (Steps[0]==0) return cr[1][1].name;
-                Z RekHod=null, RekHod1=null, RekHod2=null;
+
+
+                    Z RekHod=null, RekHod1=null, RekHod2=null;
                 for (int i=0; i<8; i++) {
                     List<Z> X1 = new LinkedList<>();
                     for (Z Z1 : X) {
@@ -347,8 +343,41 @@ public class CrossNzero extends Application {
                 RekHod=(RekHod1==null) ? RekHod2 : RekHod1;
                 if (!(RekHod==null)) return cr[RekHod.i-1][RekHod.j-1].name;
             }
-            return null;
 
+
+
+            if (menuItemHard.isSelected()) {
+
+                if (Steps[0]==1) {
+                    if (!(cr[1][1].checked)) return cr[1][1].name;
+                    return cr[0][0].name;
+                }
+
+                if (Steps[0]==2) {
+                    if (cr[0][0].checked) return cr [2][2].name;
+                    if (cr[2][2].checked) return cr [0][0].name;
+                    if (cr[0][2].checked) return cr [2][0].name;
+                    if (cr[2][0].checked) return cr [0][2].name;
+                } else {
+                    System.out.print("!!");
+                    if (!(cr[0][0].checked)) return cr[0][0].name;
+                    if (!(cr[2][2].checked)) return cr[2][2].name;
+                    if (!(cr[2][0].checked)) return cr[2][0].name;
+                    if (!(cr[0][2].checked)) return cr[0][2].name;
+                }
+
+                if (Steps[0]==3) {
+                    if (!(cr[0][0].checked)) return cr[0][0].name;
+                    if (!(cr[2][2].checked)) return cr[2][2].name;
+                    if (!(cr[2][0].checked)) return cr[2][0].name;
+                    if (!(cr[0][2].checked)) return cr[0][2].name;
+                }
+
+            }
+
+
+
+            return null;
         }
 
     }
@@ -363,24 +392,23 @@ public class CrossNzero extends Application {
         boolean nolik;
 
         Crestik(int n, int k, Group group) {
-            this.checked = false;
-            this.nolik = false;
-            this.name = name;
-            this.deniedIcon = new SVGPath();
-            this.deniedIcon.setFill(Color.rgb(250, 0, 150, 0.9));
-            this.deniedIcon.setStroke(Color.WHITE);
-            this.deniedIcon.setContent("M24.778,21.419 19.276,15.917 24.777,10.415 21.949,7.585 16.447,13.087,10.945,7.585 8.117,10.415 13.618,15.917 8.116,21.419 10.946,24.248 16.447,18.746 21.948,24.248z");
-            this.deniedIcon.setVisible(false);
-            this.deniedIcon.setScaleX(2.0);
-            this.deniedIcon.setScaleY(2.0);
-            this.deniedIcon.setLayoutX((double) (n + 30));
-            this.deniedIcon.setLayoutY((double) (k + 30));
+            checked = false;
+            nolik = false;
+            deniedIcon = new SVGPath();
+            deniedIcon.setFill(Color.rgb(250, 0, 150, 0.9));
+            deniedIcon.setStroke(Color.WHITE);
+            deniedIcon.setContent("M24.778,21.419 19.276,15.917 24.777,10.415 21.949,7.585 16.447,13.087,10.945,7.585 8.117,10.415 13.618,15.917 8.116,21.419 10.946,24.248 16.447,18.746 21.948,24.248z");
+            deniedIcon.setVisible(false);
+            deniedIcon.setScaleX(2.0);
+            deniedIcon.setScaleY(2.0);
+            deniedIcon.setLayoutX((double) (n + 30));
+            deniedIcon.setLayoutY((double) (k + 30));
             group.getChildren().add(deniedIcon);
-            this.smallCircle = new Ellipse((double) (50 + n), (50 + k), 14.0, 20.0);
-            this.smallCircle.setVisible(false);
-            this.smallCircle.setFill(Color.WHITE);
-            this.smallCircle.setStroke(Color.rgb(30, 40, 255, 0.9));
-            this.smallCircle.setStrokeWidth(5.0);
+            smallCircle = new Ellipse((double) (50 + n), (50 + k), 14.0, 20.0);
+            smallCircle.setVisible(false);
+            smallCircle.setFill(Color.WHITE);
+            smallCircle.setStroke(Color.rgb(30, 40, 255, 0.9));
+            smallCircle.setStrokeWidth(5.0);
             group.getChildren().add(smallCircle);
         }
 
@@ -471,26 +499,23 @@ class MessageBox
 
 
 class MakeMenu {
-    public static RadioMenuItem show(BorderPane pane)
+    public static void show(BorderPane pane)
     {
         MenuBar menu1 = new MenuBar();
         Menu menu2 = new Menu("Выбери сложность");
         menu1.getMenus().add(menu2);
         RadioMenuItem menuItemEasy = new RadioMenuItem("Дурак");
-        RadioMenuItem menuItemMedium = new RadioMenuItem("Такой себе");
-        RadioMenuItem menuItemHard = new RadioMenuItem("Умник");
+        CrossNzero.menuItemMedium = new RadioMenuItem("Такой себе");
+        CrossNzero.menuItemHard = new RadioMenuItem("Умник");
         ToggleGroup groupDifficulty = new ToggleGroup();
         menuItemEasy.setToggleGroup(groupDifficulty);
         menuItemEasy.setSelected(true);
-        menuItemMedium.setToggleGroup(groupDifficulty);
-        menuItemHard.setOnAction(event -> {MessageBox.show("Алгоритм еще не разработан","Опа....!", true); menuItemEasy.setSelected(true);});
-        menuItemHard.setToggleGroup(groupDifficulty);
+        CrossNzero.menuItemMedium.setToggleGroup(groupDifficulty);
+        CrossNzero.menuItemHard.setToggleGroup(groupDifficulty);
         menu2.getItems().add(menuItemEasy);
-        menu2.getItems().add(menuItemMedium);
-        menu2.getItems().add(menuItemHard);
+        menu2.getItems().add(CrossNzero.menuItemMedium);
+        menu2.getItems().add(CrossNzero.menuItemHard);
         pane.setTop(menu1);
-        return menuItemMedium;
-
     }
 
 }

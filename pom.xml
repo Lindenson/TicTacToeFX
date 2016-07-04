@@ -2,125 +2,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>wolper</groupId>
+    <groupId>com.wolperting</groupId>
     <artifactId>crossnzero</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>crossnzero</name>
-    <description>A simple version of JavaFX setup as described at http://www.oracle.com/technetwork/articles/java/enterprisefxpt3-1735081.html</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>com.MainApp</mainClass>
+        <mainClass>com.wolperting.CrossNzero</mainClass>
     </properties>
 
-    <organization>
-        <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>Your Organisation</name>
-    </organization>
 
     <build>
         <plugins>
 
-<plugin>
-    <groupId>com.excelsiorjet</groupId>
-    <artifactId>excelsior-jet-maven-plugin</artifactId>
-    <version>0.1.0</version>
-    <configuration>
-       <jetHome>
-          /Users/Wolper/Downloads/jet11.0-eval-amd64
-       </jetHome>
-       <mainClass>CrossNzero</mainClass>
-       <icon>{project.basedir}/crf3.icns</icon>
-       <hideConsole>true</hideConsole>
-    </configuration>
-</plugin>
-
-<plugin>
-    <groupId>sh.tak.appbundler</groupId>
-    <artifactId>appbundle-maven-plugin</artifactId>
-    <version>1.0.4</version>
-    <configuration>
-        <mainClass>CrossNzero</mainClass>
-        <iconFile>crf3.icns</iconFile>
-        <jvmVersion>1.8</jvmVersion>
-    </configuration>
-    <executions>
-    <execution>
-      <phase>package</phase>
-      <goals>
-        <goal>bundle</goal>
-      </goals>
-    </execution>
-  </executions>
-</plugin>
-
-
-
-
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.6</version>
+                <groupId>sh.tak.appbundler</groupId>
+                <artifactId>appbundle-maven-plugin</artifactId>
+                <version>1.0.4</version>
+                <configuration>
+                    <mainClass>com.wolperting.CrossNzero</mainClass>
+                    <iconFile>crf3.icns</iconFile>
+                    <jvmVersion>1.8</jvmVersion>
+                </configuration>
                 <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <excludeScope>system</excludeScope>
-                            <excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
+                <execution>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>bundle</goal>
+                  </goals>
+                </execution>
+              </executions>
             </plugin>
-          <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/../bin/javafxpackager</executable>
-                            <arguments>
-                                <argument>-createjar</argument>
-                                <argument>-nocss2bin</argument>
-                                <argument>-appclass</argument>
-                                <argument>${mainClass}</argument>
-                                <argument>-srcdir</argument>
-                                <argument>${project.build.directory}/classes</argument>
-                                <argument>-outdir</argument>
-                                <argument>${project.build.directory}</argument>
-                                <argument>-outfile</argument>
-                                <argument>${project.build.finalName}.jar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>default-cli</id>
-                        <goals>
-                            <goal>exec</goal>                            
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/bin/java</executable>
-                            <commandlineArgs>${runfx.args}</commandlineArgs>
-                        </configuration>
-                    </execution>
-                </executions>
-                
-     </plugin>
-            
+
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -133,6 +51,20 @@
                     </compilerArguments>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.wolperting.CrossNzero</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -146,27 +78,6 @@
         </plugins>
     </build>
 
-
-    <dependencies>
-        <!-- MigLayout -->
-
-        <dependency>
-            <groupId>com.miglayout</groupId>
-            <artifactId>miglayout-javafx</artifactId>
-            <version>4.2</version>
-        </dependency>
-
-        <!-- Apache Commons -->
-
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-
-        
-
-    </dependencies>
 
 
 </project>
