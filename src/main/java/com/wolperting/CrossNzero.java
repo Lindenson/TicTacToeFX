@@ -189,7 +189,7 @@ public class CrossNzero extends Application {
         while (i < 3) {
             int j = 0;
             while (j < 3) {
-                this.crst[i][j].setVis(false);
+                crst[i][j].setVis(false);
                 I_MOVED.set(0);
                 ++j;
             }
@@ -200,7 +200,7 @@ public class CrossNzero extends Application {
     void boxCheck(MouseEvent e) {
         int i = (int) (e.getX() / 100.0);
         int j = (int) (e.getY() / 100.0);
-        if (Steps[0] <= 8 && !this.crst[i][j].checked) {
+        if (Steps[0] <= 8 && !crst[i][j].checked) {
             crst[i][j].nolik = true;
             crst[i][j].setVis(true);
             int[] arrn = Steps;
@@ -232,7 +232,7 @@ public class CrossNzero extends Application {
         int[] priz = new int[1];
         int k = 1;
         while (k < 7) {
-            ck = this.crest2Str(crst);
+            ck = crest2Str(crst);
             int j = k++;
             priz[0] = 0;
             ck.forEach(p -> {
@@ -244,12 +244,12 @@ public class CrossNzero extends Application {
             if (priz[0] <= 2) continue;
             return true;
         }
-        ck = this.crest21Str(crst);
+        ck = crest21Str(crst);
         long k2 = ck.filter(p -> (p.nolik == cr) && p.checked).count();
         if (k2 > 2) {
             return true;
         }
-        ck = this.crest22Str(crst);
+        ck = crest22Str(crst);
         k2 = ck.filter(p -> (p.nolik == cr) && p.checked).count();
         return (k2 > 2);
     }
@@ -350,17 +350,21 @@ public class CrossNzero extends Application {
 
                 if (Steps[0]==1) {
                     if (!(cr[1][1].checked)) return cr[1][1].name;
-                    return cr[0][0].name;
+                    int rand = new Random().nextInt(100);
+                    rand = rand % 3;
+                    if (rand==1) return cr[2][0].name;
+                    return cr[rand][rand].name;
                 }
 
                 if (Steps[0]==2) {
-                    if (cr[0][0].checked) return cr [2][2].name;
-                    if (cr[2][2].checked) return cr [0][0].name;
-                    if (cr[0][2].checked) return cr [2][0].name;
-                    if (cr[2][0].checked) return cr [0][2].name;
-                } else {
-                    System.out.print("!!");
-                    if (!(cr[0][0].checked)) return cr[0][0].name;
+                    if (cr[0][0].checked) return cr[0][1].name;
+                    if (cr[2][2].checked) return cr[2][1].name;
+                    if (cr[0][2].checked) return cr[1][2].name;
+                    if (cr[2][0].checked) return cr[1][0].name;
+                }
+                if (Steps[0]==2) {
+                    if (!(cr[0][0].checked))
+                            if ((!(cr[0][1].checked)) && (!(cr[1][0].checked))) return cr[0][0].name;
                     if (!(cr[2][2].checked)) return cr[2][2].name;
                     if (!(cr[2][0].checked)) return cr[2][0].name;
                     if (!(cr[0][2].checked)) return cr[0][2].name;
@@ -372,6 +376,7 @@ public class CrossNzero extends Application {
                     if (!(cr[2][0].checked)) return cr[2][0].name;
                     if (!(cr[0][2].checked)) return cr[0][2].name;
                 }
+
 
             }
 
@@ -414,26 +419,26 @@ public class CrossNzero extends Application {
 
         void setVis(boolean bol1) {
             if (bol1) {
-                if (this.nolik) {
-                    this.deniedIcon.setVisible(true);
-                    this.checked = true;
+                if (nolik) {
+                    deniedIcon.setVisible(true);
+                    checked = true;
                 } else {
-                    this.smallCircle.setVisible(true);
-                    this.checked = true;
+                    smallCircle.setVisible(true);
+                    checked = true;
                 }
                 if (checkWin()) {
                     return;
                 }
             } else {
-                this.deniedIcon.setVisible(false);
-                this.smallCircle.setVisible(false);
-                this.checked = false;
-                this.nolik = false;
+                deniedIcon.setVisible(false);
+                smallCircle.setVisible(false);
+                checked = false;
+                nolik = false;
             }
         }
 
         boolean checked() {
-            return this.checked;
+            return checked;
         }
     }
 
