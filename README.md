@@ -1,2 +1,2 @@
 # Crossandnull
-JavaFX program - desktop game cross and null
+JavaFX program - desktop tic-tac-toe game
